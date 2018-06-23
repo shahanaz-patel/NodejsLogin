@@ -1,0 +1,25 @@
+{
+  "name": "nodejslogin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shahanaz-patel/NodejsLogin.git"
+  },
+  "author": "Shahnaz Patel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shahanaz-patel/NodejsLogin/issues"
+  },
+  "homepage": "https://github.com/shahanaz-patel/NodejsLogin#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.1.6"
+  }
+}
