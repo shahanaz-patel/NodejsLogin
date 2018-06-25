@@ -1,5 +1,7 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+var bodyParser = require('body-parser');
+
 const mongoose = require('mongoose');
 const app = express();
 
@@ -22,6 +24,11 @@ app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 
+//Body Parser Middleware
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+//set route
 app.get('/',(req,res) => {
     res.render('index');
 });
@@ -34,16 +41,60 @@ app.get('/login',(req,res) => {
     res.render('login');
 });
 
+//Process form
 app.post('/login',(req,res) => {
-    res.send('Success');
+    let errors = [];
+    if(!req.body.email){
+        errors.push({text:"Please enter your email"});
+    }
+    if(!req.body.password){
+        errors.push({text:"Invalid Password"});
+    }
+
+    if(errors.length > 0){
+        res.render('login', {
+            errors: errors,
+            email: req.body.email,
+            password: req.body.password
+        })
+    } else{
+        res.send('Success');
+    }
+    
+    // console.log(req.body);
+    // res.send('Success');
 });
 
 app.get('/sign-up',(req,res) => {
+    console.log(req.body);
     res.render('sign-up');
 });
 
 app.post('/sign-up',(req,res) => {
-    res.send('Success1');
+    let errors = [];
+    if(!req.body.firstname){
+        errors.push({text:"Please enter your Name"});
+    }
+    if(!req.body.email){
+        errors.push({text:"Please enter your email"});
+    }
+    if(!req.body.password){
+        errors.push({text:"Invalid Password"});
+    }
+
+    if(errors.length > 0){
+        res.render('login', {
+            errors: errors,
+            firstname: req.body.firstname,
+            email: req.body.email,
+            password: req.body.password
+        })
+    } else{
+        res.send('Success');
+    }
+
+    // console.log(req.body);
+    // res.send('Success1');
 });
 
 const port = 3000;
