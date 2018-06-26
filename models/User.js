@@ -13,13 +13,18 @@ var UserSchema = new Schema({
         required: true
     },
     email: {
-        type: String, 
+        type: String,
+        required:true, 
         unique: true
     },
     place: {
-        type: String
+        type: String,
+        required:true
     },
-    password: String,
+    password: {
+        type: String, 
+        required: true,
+    },
     date: {
         type: Date, 
         default: Date.now
