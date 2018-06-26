@@ -8,38 +8,26 @@ const mongoose = require('mongoose'); // for below two instructions
 require('../models/User');//extra . since we are outside the folder
 const User = mongoose.model('user');
 
+//Route login form
 router.get('/login',(req,res) => {
     res.render('users/login');
 });
 
-//Process form
-router.post('/login',(req,res) => {
-    let errors = [];
-    if(!req.body.email){
-        errors.push({text:"Please enter your email"});
-    }
-    if(!req.body.password){
-        errors.push({text:"Invalid Password"});
-    }
-
-    if(errors.length > 0){
-        res.render('login', {
-            errors: errors,
-            email: req.body.email,
-            password: req.body.password
-        })
-    } else{
-        res.send('Success');
-    }
-    
-   // // console.log(req.body);
-   // // res.send('Success');
+//Login form post
+router.post('/login',(req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/users/profile',
+        failureRedirect: '/users/login',
+        session:false
+    })(req, res, next);
 });
 
+//Route register form
 router.get('/sign-up',(req,res) => {
     res.render('users/sign-up');
 });
 
+//Registration Form post
 router.post('/sign-up',(req,res) => {
     let errors = [];
 
@@ -89,6 +77,11 @@ router.post('/sign-up',(req,res) => {
             });
         });
     }
+});
+
+//Route profile page
+router.get('/profile',(req,res) => {
+    res.render('users/profile');
 });
 
 module.exports = router;

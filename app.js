@@ -1,12 +1,19 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+const session = require('express-session');
+
 var bodyParser = require('body-parser');
+const passport =require('passport'); 
 const mongoose = require('mongoose');
 
 const app = express();
 
 //Load Routes
 const users = require('./routes/users');
+
+//Passport config
+require('./config/passport')(passport);
+
 
 //Map global promise - get rid of warning
 mongoose.Promise = global.Promise;
@@ -31,6 +38,17 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+//Express session middleware
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+//Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 //set route
 app.get('/',(req,res) => {
     res.render('index');
@@ -38,6 +56,15 @@ app.get('/',(req,res) => {
 
 app.get('/about',(req,res) => {
     res.render('about');
+});
+
+//Use routes
+app.use('/users',users);
+
+const port = 3000;
+
+app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
 });
 
 // app.get('/login',(req,res) => {
@@ -115,11 +142,24 @@ app.get('/about',(req,res) => {
 //     // res.send('Success1');
 // });
 
-//Use routes
-app.use('/users',users);
 
-const port = 3000;
 
-app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
-});
+//passport local strategy
+
+// var passport = require('passport')
+//   , LocalStrategy = require('passport-local').Strategy;
+
+// passport.use(new LocalStrategy(
+//   function(username, password, done) {
+//     User.findOne({ username: username }, function (err, user) {
+//       if (err) { return done(err); }
+//       if (!user) {
+//         return done(null, false, { message: 'Incorrect username.' });
+//       }
+//       if (!user.validPassword(password)) {
+//         return done(null, false, { message: 'Incorrect password.' });
+//       }
+//       return done(null, user);
+//     });
+//   }
+// ));  
