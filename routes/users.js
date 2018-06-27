@@ -19,13 +19,14 @@ router.post('/login',(req, res, next) => {
         successRedirect: '/users/profile',
         failureRedirect: '/users/login',
         failureFlash : true,
-        session:false
+       // session:false
     })(req, res, next);
 });
 
 //Route register form
 router.get('/sign-up',(req,res) => {
     res.render('users/sign-up');
+    
 });
 
 //Registration Form post
@@ -81,10 +82,18 @@ router.post('/sign-up',(req,res) => {
     }
 });
 
+//Logout User
+router.get('/logout', (req, res) => {
+     req.logout();
+     req.flash('success_msg', 'You are Logged out...');
+     res.redirect('/users/login');
+});
+
 //Route profile page
 router.get('/profile',(req,res) => {
     req.flash('success_msg', 'You are Logged in...')
     res.render('users/profile',{success_msg : req.flash('success_msg') });
+    //res.locals.flash = [];        --------------to hide flashmsgs(not working...)
 });
 
 module.exports = router;
