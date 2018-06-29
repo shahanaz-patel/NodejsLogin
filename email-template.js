@@ -1,7 +1,11 @@
 const nodemailer = require('nodemailer');
+const url = require('url');
 var randtoken = require('rand-token');
 var crypto = require('crypto');
+const express = require('express');
+const app = express();
 
+const Token=require('./models/Token');
 // Generate test SMTP service account from ethereal.email
 // Only needed if you don't have a real mail account for testing
 nodemailer.createTestAccount((err, account) => {
@@ -15,7 +19,7 @@ nodemailer.createTestAccount((err, account) => {
     });
 
     var rand,mailOptions,host,link;
-    app.get('/',function(req,res){
+    app.get('/send',function(req,res){
         urlparse=url.parse(req.url,true);
         id = urlparse.query.id;
         var hashtoken = crypto.randomBytes(16).toString('hex');
@@ -25,15 +29,15 @@ nodemailer.createTestAccount((err, account) => {
         });
         tokens.save();
         urlparse = url.parse(req.url,true);
-        emails=urlparse.query.email;
+        emails=urlparse.query.emailid;
         console.log(emails);
         host=req.get('host');
         link="http://"+req.get('host')+"/verify?id="+hashtoken;
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Shehnaz Patel 👻" <foo@example.com>', // sender address
-        to: 'l1726113@nwytg.com', // list of receivers
+        from: '"Shehnaz Patel " <shanazkukz@gmail.com>', // sender address
+        to: "l1873512@nwytg.com", // list of receivers
         subject: "Please confirm your Email account", // Subject line
         text: 'Hello ✔', // plain text body
         html: "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" // html body
@@ -55,4 +59,4 @@ nodemailer.createTestAccount((err, account) => {
 });
 });
 
-module.exports = router;
+//module.exports = router;
