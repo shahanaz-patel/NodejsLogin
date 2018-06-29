@@ -89,6 +89,11 @@ router.get('/logout', (req, res) => {
      res.redirect('/users/login');
 });
 
+router.get('/verification',(req,res) => {
+    req.flash('success_msg', 'Email verified successfully');
+    res.render('users/verification');
+});
+
 //Route profile page
 router.get('/profile',(req,res) => {
     req.flash('success_msg', 'You are Logged in...')

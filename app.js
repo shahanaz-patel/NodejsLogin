@@ -19,7 +19,7 @@ require('./config/passport')(passport);
 mongoose.Promise = global.Promise;
 
 //Connect to mongoose
-mongoose.connect('mongodb://localhost:27017/users')
+mongoose.connect('mongodb://localhost:27017/loginSystem')
 .then(() => console.log("MongoDB Connected..."))
 .catch(err => console.log(err));
 
@@ -41,7 +41,8 @@ app.use(bodyParser.json())
 app.use(session({
     secret: 'secret',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+
 }));
 
 app.use(flash());
@@ -68,6 +69,7 @@ app.get('/about',(req,res) => {
     res.render('about');
 });
 
+
 //Use routes
 app.use('/users',users);
 
@@ -76,6 +78,7 @@ const port = 3000;
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
+
 
 // app.get('/login',(req,res) => {
 //     res.render('login');

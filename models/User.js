@@ -23,7 +23,11 @@ var UserSchema = new Schema({
     },
     password: {
         type: String, 
-        required: true,
+        required: true
+    },
+    isVerified: {
+        type: Boolean, 
+        default: false
     },
     date: {
         type: Date, 
@@ -32,5 +36,5 @@ var UserSchema = new Schema({
                 
 });
 
-// module.exports = 
 mongoose.model('user', UserSchema);
+//module.exports = user;
