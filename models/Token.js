@@ -23,7 +23,7 @@ var TokenSchema = new Schema({
 });
 
 mongoose.model('Token', TokenSchema);
-module.exports = Token;
+//module.exports = Token;
 
 
 

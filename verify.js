@@ -7,7 +7,7 @@ var url=require('url');
 
 const Token=require('./models/Token');
 const User=require('./models/User');
-app.get('/',function(req,res){
+app.get('/verify',function(req,res){
 
 //   var dbconnect=require('./mongodb_connect.js');
 //Connect to mongoose

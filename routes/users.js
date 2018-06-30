@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const flash = require('connect-flash');
 const router = express.Router();
 const mongoose = require('mongoose'); // for below two instructions
 
@@ -69,8 +70,11 @@ router.post('/sign-up',(req,res) => {
                 new User(newUser)
                 .save()
                     .then(user => {
+                        res.writeHead(302, {'Location': 'http://127.0.0.1:3000/send?emailid='+req.body.email+'&id='+user._id});
+                        res.end();
+                        console.log('writeheadlink');
                         req.flash('success_msg', 'You are registered now..Plz verify your email to log in...');
-                        res.writeHead(302, {'Location': 'http://127.0.0.1:3000/send?emailid='+req.body.email+'&id='+newUser._id});
+                        
                     })
                     .catch(err => {
                         console.log(err);
@@ -83,21 +87,9 @@ router.post('/sign-up',(req,res) => {
 
     }
 });
-router.get('/send',function(req,res){
-    urlparse=url.parse(req.url,true);
-    id = urlparse.query.id;
-    var hashtoken = crypto.randomBytes(16).toString('hex');
-    var tokens = new Token({ 
-        _userId: id, 
-        token: hashtoken 
-    });
-    tokens.save();
-    urlparse = url.parse(req.url,true);
-    emails=urlparse.query.emailid;
-    console.log(emails);
-    host=req.get('host');
-    link="http://"+req.get('host')+"/verify?id="+hashtoken;
-});
+
+/////
+
 
 //Logout User
 router.get('/logout', (req, res) => {

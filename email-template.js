@@ -13,31 +13,31 @@ nodemailer.createTestAccount((err, account) => {
     let transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
-            user: "shanazkukz@gmail.com",
-            pass: "kukzkukz"
+            user: "shazushaaz196@gmail.com",
+            pass: "Tester23456"
         }
     });
 
     var rand,mailOptions,host,link;
-    app.get('/send',function(req,res){
-        urlparse=url.parse(req.url,true);
-        id = urlparse.query.id;
-        var hashtoken = crypto.randomBytes(16).toString('hex');
-        var tokens = new Token({ 
-            _userId: id, 
-            token: hashtoken 
-        });
-        tokens.save();
-        urlparse = url.parse(req.url,true);
-        emails=urlparse.query.emailid;
-        console.log(emails);
-        host=req.get('host');
-        link="http://"+req.get('host')+"/verify?id="+hashtoken;
+    // app.get('/send',function(req,res){
+    //     urlparse=url.parse(req.url,true);
+    //     id = urlparse.query.id;
+    //     var hashtoken = crypto.randomBytes(16).toString('hex');
+    //     var tokens = new Token({ 
+    //         _userId: id, 
+    //         token: hashtoken 
+    //     });
+    //     tokens.save();
+    //     urlparse = url.parse(req.url,true);
+    //     emails=urlparse.query.emailid;
+    //     console.log(emails);
+    //     host=req.get('host');
+    //     link="http://"+req.get('host')+"/verify?id="+hashtoken;
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Shehnaz Patel " <shanazkukz@gmail.com>', // sender address
-        to: "l1873512@nwytg.com", // list of receivers
+        from: '"Shehnaz Patel " <shazushaaz196@gmail.com>', // sender address
+        to: "l2477426@nwytg.com", // list of receivers
         subject: "Please confirm your Email account", // Subject line
         text: 'Hello ✔', // plain text body
         html: "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" // html body
@@ -57,6 +57,5 @@ nodemailer.createTestAccount((err, account) => {
         // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
     });
 });
-});
 
-//module.exports = router;
+module.exports = app;
