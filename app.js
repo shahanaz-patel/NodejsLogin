@@ -137,7 +137,7 @@ app.get('/verify',(req,res) => {
                      user.save();
                      console.log(user);
                      req.flash('success_msg', 'Email verified successfully...Login to activate your account...');
-                     res.render('users/login');
+                     res.render('users/login',{success_msg:'Email verified successfully...Login to activate your account...'});
                    }
                       if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
                     });

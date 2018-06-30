@@ -68,8 +68,8 @@ router.post('/sign-up',(req,res) => {
                     //throw err;
                     {
                         if(err.code===11000){
-                            req.flash('error_msg', 'Email verified successfully...Login to activate your account...');
-                     res.render('users/sign-up');
+                            req.flash('error_msg', 'Already exist');
+                            res.render('users/sign-up',{error_msg:'Already Exists'});
                         }
                     }
                 newUser.password = hash;
