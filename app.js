@@ -28,8 +28,8 @@ mongoose.connect('mongodb://localhost:27017/loginSystem')
 .catch(err => console.log(err));
 
 // //Load User model
-// require('./models/User');
-// const User = mongoose.model('user');
+require('./models/User');
+const User = mongoose.model('user');
 
 //Load Token model
 require('./models/Token');
@@ -129,11 +129,19 @@ app.get('/verify',(req,res) => {
     urlparse=url.parse(req.url,true);
     id=urlparse.query.id;
     Token.findOne({ token: id }, function (err, token) {
-      console.log(token)
-          if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token may have expired.' });
-          User.findOne({ _id: token._userId }, function (err, user) {
+  
+          if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+          User.findOne({ _id:token._userId }, function (err, user) {
+                   if(user){
+                     user.isVerified = true;
+                     user.save();
+                     console.log(user);
+                     req.flash('success_msg', 'Email verified successfully...Login to activate your account...');
+                     res.render('users/login');
+                   }
                       if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
                     });
+  
   
   });
   

@@ -65,7 +65,13 @@ router.post('/sign-up',(req,res) => {
         bcrypt.genSalt(9,(err, salt) => {
             bcrypt.hash(newUser.password, salt, (err, hash) => {
                 if(err)
-                    throw err;
+                    //throw err;
+                    {
+                        if(err.code===11000){
+                            req.flash('error_msg', 'Email verified successfully...Login to activate your account...');
+                     res.render('users/sign-up');
+                        }
+                    }
                 newUser.password = hash;
                 new User(newUser)
                 .save()
