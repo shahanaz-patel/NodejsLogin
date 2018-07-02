@@ -184,11 +184,8 @@ app.post('/reset/:token', function(req, res) {
                 user.resetPasswordToken = undefined;
                 user.resetPasswordExpires = undefined;
 
-                user.save(function(err) {
-                    req.logIn(user, function(err) {
-                      done(err, user);
-                    });
-                  });
+                user.save()
+                  
 
                  
             });
