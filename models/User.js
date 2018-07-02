@@ -29,6 +29,8 @@ var UserSchema = new Schema({
         type: Boolean, 
         default: false
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     date: {
         type: Date, 
         default: Date.now

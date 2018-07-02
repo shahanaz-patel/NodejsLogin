@@ -2,10 +2,12 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const flash = require('connect-flash');
+const async = require('async');
 const bodyParser = require('body-parser');
 const passport =require('passport'); 
-const url=require('url');
+const bcrypt = require('bcryptjs');
 const randtoken = require('rand-token');
+const url=require('url');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
@@ -104,7 +106,7 @@ app.get('/send',function(req,res){
     
        // var rand,mailOptions,host,link;
         let mailOptions = {
-            from: '"LoginSystem " <shazushaaz196@gmail.com>', // sender address
+            from: '"LoginSystem " <loginverification@gmail.com>', // sender address
             to: emails, // list of receivers
             subject: "Please confirm your Email account", // Subject line
             text: 'Hello ✔', // plain text body
@@ -146,6 +148,92 @@ app.get('/verify',(req,res) => {
   });
   
 });
+
+app.get('/reset/:token',(req,res) => {
+    User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        if (!user) {
+          req.flash('error_msg', 'Password reset token is invalid or has expired.');
+          return res.redirect('/users/forgot');
+        }
+        res.render('users/reset', {
+          user: req.user
+        });
+      });
+});
+
+//process reset password token
+app.post('/reset/:token', function(req, res) {
+    async.waterfall([
+      function(done) {
+        User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+          if (!user) {
+            req.flash('error_msg', 'Password reset token is invalid or has expired.');
+            return res.redirect('back');
+          }
+          bcrypt.genSalt(9,(err, salt) => {
+            bcrypt.hash(user.password, salt, (err, hash) => {
+                if(err)
+                    //throw err;
+                    {
+                        if(err.code===11000){
+                            req.flash('error_msg', 'Already exist');
+                            res.render('users/sign-up',{error_msg:'Already Exists'});
+                        }
+                    }
+                user.password = hash;
+                user.resetPasswordToken = undefined;
+                user.resetPasswordExpires = undefined;
+
+                user.save(function(err) {
+                    req.logIn(user, function(err) {
+                      done(err, user);
+                    });
+                  });
+
+                 
+            });
+        });
+
+        });
+      },
+      function(user, done) {
+        nodemailer.createTestAccount((err, account) => {
+            // create reusable transporter object using the default SMTP transport
+            let transporter = nodemailer.createTransport({
+                service: "Gmail",
+                auth: {
+                    user: "bosetester19@gmail.com",
+                    pass: "zeusbomber"
+                }
+            });
+        
+           // var rand,mailOptions,host,link;
+            let mailOptions = {
+                from: '"LoginSystem " <resetsuccessful@gmail.com>', // sender address
+                to: user.email, // list of receivers
+                subject: 'Your password has been changed', // Subject line
+                text: 'Hello,\n\n' +
+                'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n' // plain text body
+            };
+        
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(error);
+                }
+                console.log('Message sent: %s', info.messageId);
+                // Preview only available when sending through an Ethereal account
+                console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                res.render('users/verification');
+        
+            });
+        });
+      }
+    ], function(err) {
+      res.redirect('/reset');
+    });
+  });
+
 
 //Use routes
 app.use('/users',users);
