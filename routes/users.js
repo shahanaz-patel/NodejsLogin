@@ -29,7 +29,7 @@ router.post('/login',(req, res, next) => {
         successRedirect: '/users/profile',
         failureRedirect: '/users/login',
         failureFlash : true,
-       // session:false
+        session:true
     })(req, res, next);
 });
 

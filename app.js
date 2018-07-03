@@ -171,28 +171,57 @@ app.post('/reset/:token', function(req, res) {
             return res.redirect('back');
           }
           bcrypt.genSalt(9,(err, salt) => {
-            bcrypt.hash(user.password, salt, (err, hash) => {
-                if(err)
-                    //throw err;
-                    {
-                        if(err.code===11000){
-                            req.flash('error_msg', 'Already exist');
-                            res.render('users/sign-up',{error_msg:'Already Exists'});
-                        }
-                    }
+            bcrypt.hash(req.body.password, salt, (err, hash) => {
+                // if(err) throw err;
+
                 user.password = hash;
                 user.resetPasswordToken = undefined;
                 user.resetPasswordExpires = undefined;
+                console.log('password  ' + user.password  + 'and the user is' + user.email);
 
-                user.save()
+                user.save(function(err) {
+                    if (err) {
+                        console.log('here')
+                        return res.redirect('back');
+                    } else { 
+                        console.log('here2')
+                        req.logIn(user, function(err) {
+                        done(err, user);
+                      });
+                  
+                    }
+                });
+
+            });
+          });
+            
+        
+        });
+    },
+              
+        //   bcrypt.genSalt(9,(err, salt) => {
+        //     bcrypt.hash(user.password, salt, (err, hash) => {
+        //         if(err)
+        //             //throw err;
+        //             {
+        //                 if(err.code===11000){
+        //                     req.flash('error_msg', 'Already exist');
+        //                     res.render('users/sign-up',{error_msg:'Already Exists'});
+        //                 }
+        //             }
+                // user.password = hash;
+                // user.resetPasswordToken = undefined;
+                // user.resetPasswordExpires = undefined;
+
+                // user.save()
                   
 
                  
-            });
-        });
+           // });
+       // });
 
-        });
-      },
+       // });
+     // },
       function(user, done) {
         nodemailer.createTestAccount((err, account) => {
             // create reusable transporter object using the default SMTP transport
