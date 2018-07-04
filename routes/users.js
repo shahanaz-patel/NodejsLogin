@@ -8,6 +8,7 @@ const url=require('url');
 const randtoken = require('rand-token');
 const crypto = require('crypto');
 const router = express.Router();
+const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose'); // for below two instructions
 
 //Load User model
@@ -190,6 +191,24 @@ router.get('/profile',(req,res) => {
     req.flash('success_msg', 'You are Logged in...')
     res.render('users/profile',{success_msg : req.flash('success_msg') });
     //res.locals.flash = [];        --------------to hide flashmsgs(not working...)
+});
+
+router.use(fileUpload());
+ 
+router.post('/profile', function(req, res) {
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
+ 
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  let sampleFile = req.files.userFile;
+ 
+  // Use the mv() method to place the file somewhere on your server
+  sampleFile.mv('uploads/filename.jpg', function(err) {
+    if (err)
+      return res.status(500).send(err);
+ 
+    res.send('File uploaded!');
+  });
 });
 
 module.exports = router;

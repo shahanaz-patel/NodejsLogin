@@ -260,6 +260,8 @@ app.post('/reset/:token', function(req, res) {
     });
   });
 
+  
+
 
 //Use routes
 app.use('/users',users);
