@@ -1,7 +1,6 @@
 {
   "name": "nodejslogin",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -34,5 +33,7 @@
     "passport-local": "^1.0.0",
     "passport-session": "^1.0.2",
     "rand-token": "^0.4.0"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
